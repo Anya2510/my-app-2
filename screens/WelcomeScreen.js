@@ -9,7 +9,6 @@ export default class WelcomeScreen extends React.Component{
     this.state={
         emailId:"",
         password:"",
-        modalVisible:false,
         name:"",
         confirmPassword:""
     }
@@ -66,24 +65,6 @@ export default class WelcomeScreen extends React.Component{
             </Modal>
         )
     }
-    userSignup=(username, password, confirmPassword)=>{
-if(password!==confirmPassword){
-    return Alert.alert('Password doesnt match')
-}else{
-    firebase.auth().createUserWithEmailAndPassword(username,password)
-    .then(response=>{
-        return Alert.alert('user added successfully')
-    }).catch(error=>{
-var errorCode=error.code
-var errorMessage=error.message
-return Alert.alert(errorMessage)
-    })
-    db.collection('users').add({
-        first_name:this.state.name,
-        email_id:this.state.emailId
-    })
-}
-    }
 
     userLogin=(emailId, password)=>{
         firebase.auth().signInWithEmailAndPassword(emailId, password)
@@ -101,7 +82,6 @@ render(){
         <ScrollView>
         <View style={styles.container}>
             <View style={{justifyContent:'center', alignItems:'center'}}>
-                {this.showModal()}
             </View>
 <Text>Welcome Screen</Text>
 <View>
@@ -131,23 +111,18 @@ render(){
 </View>
 <View>
     <TouchableOpacity onPress={()=>{
-        this.setState({
-            modalVisible:true
-            
-        })
+     this.props.navigation.navigate('SignUp')
     }}>
         <Text style={styles.buttonText}>Sign up</Text>
     </TouchableOpacity>
+
     <TouchableOpacity style={styles.button} 
     onPress={()=>{
-        this.userLogin(this.state.emailId, this.state.password)
-        this.props.navigation.navigate('Information')
+        this.userLogin(this.state.emailId,this.state.password)
+        this.props.navigation.navigate('Diagnosis')
     }}
     >
         <Text style={styles.buttonText}>Login</Text>
-    </TouchableOpacity>
-    <TouchableOpacity>
-        <Text>Save</Text>
     </TouchableOpacity>
 </View>
         </View>
